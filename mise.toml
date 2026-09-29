@@ -1,0 +1,23 @@
+[tools]
+node = "22.12.0"
+
+[tasks.install]
+run = "npm ci"
+sources = ["package-lock.json"]
+outputs = ["node_modules/.package-lock.json"]
+
+[tasks.dev]
+depends = ["install"]
+run = "npm run dev"
+
+[tasks.build]
+depends = ["install"]
+run = "npm run build"
+
+[tasks.preview]
+depends = ["install"]
+run = "npm run preview"
+
+[tasks.new]
+depends = ["install"]
+run = "npm run new"

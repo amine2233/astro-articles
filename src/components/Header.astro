@@ -1,0 +1,49 @@
+---
+import { languages, langs, useTranslations, url, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  alternates?: Partial<Record<Lang, string>>;
+}
+const { lang, alternates = {} } = Astro.props;
+const t = useTranslations(lang);
+---
+<header class="header">
+  <div class="container header-inner">
+    <a class="brand" href={url(`/${lang}/`)}>
+      <span class="brand-mark">{'</>'}</span> {t('site.title')}
+    </a>
+    <nav class="nav">
+      <a href={url(`/${lang}/`)}>{t('nav.posts')}</a>
+      <a href={url(`/${lang}/tags/`)}>{t('nav.tags')}</a>
+      <span class="lang-switch">
+        {langs.map((l) =>
+          l === lang ? (
+            <span class="active" aria-current="true">{l.toUpperCase()}</span>
+          ) : (
+            <a
+              href={url(alternates[l] ?? `/${l}/`)}
+              hreflang={l}
+              lang={l}
+              title={languages[l]}
+            >{l.toUpperCase()}</a>
+          )
+        )}
+      </span>
+      <button id="theme-toggle" type="button" class="theme-toggle" aria-label={t('theme.toggle')} title={t('theme.toggle')}><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  btn?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const isDark =
+      root.dataset.theme === 'dark' ||
+      (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    const next = isDark ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+  });
+</script>

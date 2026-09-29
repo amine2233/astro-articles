@@ -1,0 +1,19 @@
+---
+// Root "/" → redirect to the visitor's preferred language (falls back to English).
+import { url } from '../i18n/ui';
+const en = url('/en/');
+const fr = url('/fr/');
+---
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${en}`} />
+    <link rel="canonical" href={en} />
+    <script is:inline define:vars={{ en, fr }}>
+      const pref = (navigator.languages?.[0] || navigator.language || 'en').toLowerCase();
+      location.replace(pref.startsWith('fr') ? fr : en);
+    </script>
+  </head>
+  <body><a href={en}>English</a> · <a href={fr}>Français</a></body>
+</html>
